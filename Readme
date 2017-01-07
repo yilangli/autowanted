@@ -1,0 +1,3 @@
+The public url of project 5 is 121.42.200.84
+Mysql Default username:root, password:12345
+Please Configure the JDBC connection in JdbcUtil.java if you want 

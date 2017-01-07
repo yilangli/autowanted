@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Autowanted</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../css/3-col-portfolio.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<style>
+	img{
+		width:500px !important;
+		height:250px !important;
+	}
+	.btn1{
+		margin-top:-80px;
+		float:right;
+	}
+	.btn2{
+		margin-top:-40px;
+		float:right;
+	}
+
+</style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../index.html">Autowanted</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav" id="nav">
+                   <li>
+                        <a href="../post.html">Post</a>
+                    </li>
+                    <li>
+                        <a href="profile.html">Profile</a>
+                    </li>
+                    <li>
+                        <a href="../logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container" id="posts">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Vehicle Post
+                    <small>Buckets</small>
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+		
+
+       
+
+
+    </div>
+    <!-- /.container -->
+	<div class="container">
+		        <!-- Footer -->
+		  
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Your Website 2014</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </footer>
+	
+	</div>
+    <!-- jQuery -->
+    <script src="../js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/bootstrap.min.js"></script>
+	
+	<script>
+	function changeType(id,type){
+		  $.get("../setPost",{'postId':id,'postType':type},function(data,status){
+			  location.reload();
+		  });
+	}
+	
+	
+    $.post("../posts",function(data,status){
+		data=JSON.parse(data);
+		if(data.username=="null"){
+			window.location.href="login.html";
+		}else{
+			if(data.type=="user"){
+				$("#nav").html('<li><a href="post.html">Post</a></li><li><a href="addVehicle.html">Add Vehicle</a></li><li><a href="profile.html">Profile</a></li> <li><a href="../logout">Logout</a></li>');
+
+			}else{
+				$("#nav").html('<li><a href="post.html">Manage</a></li><li><a href="profile.html">Profile</a></li> <li><a href="../logout">Logout</a></li>');
+
+			}
+		}
+		
+		 $(data.response).each(function(index,post){
+		
+			 $("#posts").append('<div class="row"><div class="col-md-7"> <a href="#"><img class="img-responsive" src="..'+post.vehicle.image+'" alt=""></a></div> <div class="col-md-5"><h3>'+post.vehicle.make+'</h3><h4>'+post.vehicle.model+'</h4><ul><li>Vin: '+post.vehicle.vin+'</li><li>Year: '+post.vehicle.year+'</li><li>Mileage: '+post.vehicle.mileage+'</li></ul>');
+			 $("#posts").append('<a class="btn btn1 btn-primary" href="vehicle.html?'+post.id+'" id="view">View Car</a>');
+
+			   if(post.status == 3 && data.type == "user"){
+			 	$("#posts").append('<button class="btn btn2 btn-danger" disabled id="sold">Sold Out</button>');
+			 }else if(post.status!=3 && data.type=="user"){
+			 	$("#posts").append('<button class="btn btn2 btn-success" onclick="changeType('+post.id+',3)" id="sold">Sold Out</button>');
+			 }
+			 else if(data.type=="admin"){
+			 	$("#posts").append('<button class="btn btn2 btn-success" onclick="changeType('+post.id+',1)" id="approval">Approval</button>');
+			 } 
+			 $("#posts").append('</div></div><hr>');
+		 });
+		
+			
+		
+    });
+    </script>
+	
+</body>
+
+</html>
